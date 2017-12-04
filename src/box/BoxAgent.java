@@ -20,12 +20,12 @@ import java.util.logging.Logger;
  * @author Mélanie DUBREUIL
  */
 public class BoxAgent extends Agent {
-    protected AID[] boxes;
-    protected int priorite;
-    protected int x;
-    protected int y;
-    protected int yObjectif; // Comment modéliser l'objectif ? yObjectif ? ou bien AID de l'agent en dessous ? => yObjetif
-    protected int xObjectif = -1; // Undetermined until first box placed
+    protected AID[] boxes; // Connaissances de l'agent
+    protected int priorite; // Priorité de placement
+    protected int x; // Position courante sur l'axe X
+    protected int y; // Position courante sur l'axe Y 
+    protected int yObjectif; // Position objectif sur l'axe Y : Comment modéliser l'objectif ? yObjectif ? ou bien AID de l'agent en dessous ? => yObjetif
+    protected int xObjectif = -1; // Position objectif sur l'axe X: Undetermined until first box placed
 
     @Override
     protected void setup() {
@@ -76,6 +76,8 @@ public class BoxAgent extends Agent {
                                 // Perform the request
                                 boxes = knownBox;
                                 addBehaviour(new Coordination());
+                                
+                                //@Todo stop tickerBehaviour here
                             }
                         }
                     } catch (FIPAException ex) {
@@ -96,11 +98,11 @@ public class BoxAgent extends Agent {
     }
 
     private class Coordination extends Behaviour {
-        private int step = 0;
-        private AID prioritaire;
-        private int bestPriorite;
+        private int step = 0; // Etape courante de la coordination
+        private AID prioritaire; // Agent prioritaire courant
+        private int bestPriorite; // Meilleure priorité courante
         private MessageTemplate mt;
-        private int repliesCnt = 0;
+        private int repliesCnt = 0; // Nombre de réponses reçues
 
         @Override
         public void action() {
